@@ -44,13 +44,17 @@ class BearerAuth(AuthBase):
     """
 
     def __init__(self, token):
-        """ Instantiate the auth class. """
+        """
+        Instantiate the auth class.
+        """
         self.token = token
 
-    def __call__(self, r):
-        """ Update the request headers. """
-        r.headers['Authorization'] = 'Bearer {}'.format(self.token)
-        return r
+    def __call__(self, request):
+        """
+        Update the request headers.
+        """
+        request.headers['Authorization'] = 'Bearer {}'.format(self.token)
+        return request
 
 
 class EcommerceApiClient(object):
