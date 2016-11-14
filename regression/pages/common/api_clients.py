@@ -34,7 +34,7 @@ def check_response(response):
     if response.status_code != 200:
         raise ApiException(
             'API request failed with following error code: ' +
-            str(response.status_code)
+            str(response.status_code) + '\n' + response.text
         )
 
 
@@ -100,9 +100,7 @@ class EcommerceApiClient(object):
         Args:
             coupon_id:
         """
-        response = self.ecommerce_api_client.coupons(coupon_id).delete()
-        if not response:
-            raise ApiException('Failed to delete the coupon using API')
+        self.ecommerce_api_client.coupons(coupon_id).delete()
 
     def get_coupon_codes(self, coupon_id):
         """
