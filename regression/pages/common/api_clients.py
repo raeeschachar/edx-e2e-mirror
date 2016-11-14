@@ -79,7 +79,7 @@ class EcommerceApiClient(object):
         """
         response = self.ecommerce_api_client.coupons.post(data=payload)
         if 'coupon_id' not in response.keys():
-            raise ApiException('Coupon not created')
+            raise ApiException('Coupon not returned')
         return response['coupon_id']
 
     def get_coupon_report(self, coupon_id):
