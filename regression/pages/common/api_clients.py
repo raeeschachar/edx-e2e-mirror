@@ -16,6 +16,7 @@ from regression.pages.whitelabel.const import (
     ENROLLMENT_API_URL,
     URL_WITHOUT_AUTH
 )
+from regression.pages.common.utils import verify_trailing_slash
 
 
 class ApiException(Exception):
@@ -123,7 +124,7 @@ class EnrollmentApiClient(object):
     """
 
     def __init__(self, host=None, key=None):
-        self.host = host or ENROLLMENT_API_URL
+        self.host = verify_trailing_slash(host or ENROLLMENT_API_URL)
         self.key = key or ACCESS_TOKEN
 
     def is_user_enrolled(self, username, course_id):
@@ -135,7 +136,7 @@ class EnrollmentApiClient(object):
         Returns:
             True or false based on whether user is enrolled
         """
-        url = '{host}/enrollment/{username},{course_id}'.format(
+        url = '{host}enrollment/{username},{course_id}'.format(
             host=self.host,
             username=username,
             course_id=course_id
@@ -155,7 +156,7 @@ class LmsApiClient(object):
         """
         Instantiate the api class.
         """
-        self.host = host or URL_WITHOUT_AUTH
+        self.host = verify_trailing_slash(host or URL_WITHOUT_AUTH)
         self.session = requests.Session()
         self.session.auth = (AUTH_USERNAME, AUTH_PASSWORD)
         self.login_response = None
