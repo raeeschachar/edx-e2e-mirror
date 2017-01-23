@@ -129,10 +129,6 @@ def save_changes_popup_for_studio(self):
     """
     press_the_notification_button(self, "save")
     self.wait_for_ajax()
-    self.wait_for_element_visibility(
-        '#alert-confirmation-title',
-        'Save confirmation message is visible'
-    )
 
 def click_confirmation_prompt_primary_button(self):
     """
