@@ -50,16 +50,14 @@ class StudioGradingTest(StudioBaseTestClass):
         self.grading_page.click_new_grade_button()
         self.assertEquals(self.grading_page.letter_grade('.letter-grade'), 'A')
         # Verify that after refreshing, changes remain intact
-        self.browser.refresh()
-        self.grading_page.wait_for_page()
+        self.grading_page.visit()
         self.assertEquals(self.grading_page.letter_grade('.letter-grade'), 'A')
         # Deletion
         self.grading_page.click_remove_grade()
         self.assertEquals(
             self.grading_page.letter_grade('.letter-grade'), 'Pass')
         # Verify that after refreshing, changes remain intact
-        self.browser.refresh()
-        self.grading_page.wait_for_page()
+        self.grading_page.visit()
         self.assertEquals(
             self.grading_page.letter_grade('.letter-grade'), 'Pass')
 
