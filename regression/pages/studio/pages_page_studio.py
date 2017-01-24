@@ -149,6 +149,9 @@ class PagesPageExtended(CoursePageExtended):
         Clicks hide/show toggle button
         """
         toggle_checkbox_css = '.toggle-checkbox'
+        self.wait_for_element_presence(
+                toggle_checkbox_css, 'Toggle button presence'
+        )
         toggle_checkbox = self.q(css=toggle_checkbox_css).results[index]
         ActionChains(self.browser).move_to_element(
             toggle_checkbox
