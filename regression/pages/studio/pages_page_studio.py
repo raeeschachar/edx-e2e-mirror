@@ -155,6 +155,7 @@ class PagesPageExtended(CoursePageExtended):
         self.browser.execute_script(
             "$('{}').click()".format(toggle_checkbox_css)
         )
+        self.wait_for_ajax()
         sync_on_notification(self)
         return 'Wiki'
 
