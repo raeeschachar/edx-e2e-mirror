@@ -156,7 +156,6 @@ class PagesPageExtended(CoursePageExtended):
             "$('{}').click()".format(toggle_checkbox_css)
         )
         sync_on_notification(self)
-        self.wait_for_ajax()
         return 'Wiki'
 
     def get_all_pages(self):
