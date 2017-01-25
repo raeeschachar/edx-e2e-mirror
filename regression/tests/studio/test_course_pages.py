@@ -207,7 +207,6 @@ class PagesTestWithLms(StudioBaseTestClass):
         self.pages_page.visit()
         # Click hide/show toggle, assert page is not shown.
         page = self.pages_page.click_hide_show_toggle()
-        self.assertFalse(self.pages_page.is_page_configured_to_show())
         # Assert page is not shown in the LMS.
         self.assert_page_is_not_shown_in_lms(page)
 
@@ -215,6 +214,5 @@ class PagesTestWithLms(StudioBaseTestClass):
         # the toggle to show the page.
         self.pages_page.visit()
         page = self.pages_page.click_hide_show_toggle()
-        self.assertTrue(self.pages_page.is_page_configured_to_show())
         # Assert page is shown in the LMS.
         self.assert_page_is_shown_in_lms(page)
