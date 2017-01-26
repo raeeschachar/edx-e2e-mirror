@@ -150,18 +150,13 @@ class PagesPageExtended(CoursePageExtended):
         """
         toggle_checkbox_css = '.is-movable[data-tab-id="wiki"] ' \
                               '.action-visible [type="checkbox"]'
-        checkbox_css_action = self.q(
-            css='.is-movable[data-tab-id="wiki"] '
-                '.action-visible [type="checkbox"]'
-        ).results[0]
+        checkbox_css_action = self.q(css=toggle_checkbox_css).results[0]
         self.wait_for_element_presence(
             toggle_checkbox_css, 'Toggle button presence'
         )
-        ActionChains(
-            self.browser
-        ).move_to_element(
+        ActionChains(self.browser).move_to_element(checkbox_css_action).click(
             checkbox_css_action
-        ).click(checkbox_css_action).perform()
+        ).perform()
         sync_on_notification(self)
         return 'Wiki'
 
