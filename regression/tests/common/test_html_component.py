@@ -11,13 +11,12 @@ from regression.pages.studio.course_outline_page import (
     CourseOutlinePageExtended
 )
 from regression.pages.studio.unit_page import UnitPageExtended
-from regression.pages.studio.login_studio import StudioLogin
 from regression.pages.studio.studio_home import DashboardPageExtended
-from regression.pages.lms.login_lms import LmsLogin
 from regression.pages.lms.utils import get_course_key
 from regression.pages.lms.lms_courseware import CoursewarePageExtended
 from regression.tests.helpers import (
-    LoginHelper, get_course_info, get_data_id_of_component
+    StudioLoginApi, get_course_info, get_data_id_of_component, LmsLoginApi,
+    get_data_locator
 )
 
 
@@ -30,16 +29,17 @@ class StudioLmsComponentBaseTest(WebAppTest):
         Common setup for component tests
         """
         super(StudioLmsComponentBaseTest, self).setUp()
-        # Login to Lms first to avoid authentication problems
-        self.login_page = LmsLogin(self.browser)
-        LoginHelper.login(self.login_page)
+
+        studio_login = StudioLoginApi()
+        studio_login.authenticate(self.browser)
+
+        lms_login = LmsLoginApi()
+        lms_login.authenticate(self.browser)
 
         self.unit_container_page = UnitPageExtended(
             self.browser, None
         )
 
-        self.studio_login_page = StudioLogin(self.browser)
-        LoginHelper.login(self.studio_login_page)
         self.studio_home_page = DashboardPageExtended(self.browser)
 
         self.course_info = get_course_info()
@@ -96,10 +96,7 @@ class StudioLmsHTMLTest(StudioLmsComponentBaseTest):
         components = [
             'Text',
             'Announcement',
-            'Anonymous User ID',
-            'Full Screen Image Tool',
             'IFrame Tool',
-            'Zooming Image Tool',
             'Raw HTML'
         ]
         # Add components
@@ -170,14 +167,19 @@ class StudioLmsAdvancedComponentTest(StudioLmsComponentBaseTest):
         self.unit_container_page.wait_for_page()
 
         self.unit_container_page.add_word_cloud_component(True)
-
-        word_cloud_data_locator = self.unit_container_page.get_data_locator()
+        word_cloud_data_locator = get_data_locator(
+            self.unit_container_page
+        )
+        
+        # Publish Unit
+        self.studio_course_outline.publish()
 
         # View Live
         self.unit_container_page.view_live_version()
+        self.lms_courseware.wait_for_page()
         self.assertEqual(
             word_cloud_data_locator,
-            get_data_id_of_component(self.lms_courseware)
+            get_data_locator(self.lms_courseware)
         )
         # Remove this after addCleanup is added for all tests
         # Cleanup test
@@ -213,7 +215,7 @@ class StudioLmsAdvancedComponentTest(StudioLmsComponentBaseTest):
 
         self.assertEqual(
             self.unit_container_page.add_custom_js_display_and_grading(),
-            'Custom Javascript Display and Grading'
+            'Custom JavaScript Display and Grading'
         )
 
         studio_custom_js = get_data_id_of_component(
@@ -264,7 +266,7 @@ class StudioViewTest(StudioLmsComponentBaseTest):
         self.unit_container_page.wait_for_page()
         self.unit_container_page.add_word_cloud_component(True)
         # Get unique data locator id of the unit added).
-        data_locator = self.unit_container_page.get_data_locator()
+        data_locator = get_data_locator(self.unit_container_page)
         self.lms_courseware.visit()
         # From LMS, navigate to the section added.
         course_nav = CourseNavPage(self.browser)
@@ -274,7 +276,7 @@ class StudioViewTest(StudioLmsComponentBaseTest):
         self.unit_container_page.wait_for_page()
         # Correct unit component should open.
         self.assertEqual(
-            self.unit_container_page.get_data_locator(),
+            get_data_locator(self.unit_container_page),
             data_locator, 'Correct component is opened'
         )
         # Remove this after addCleanup is added for all tests.
